@@ -1,0 +1,65 @@
+services:
+  bitcoin-data:
+    image: ghcr.io/soundofspace/argon-docker-deploy/bitcoin-data:latest
+    build: 
+      context: data
+      dockerfile: Dockerfile
+      args:
+        - TAR_PATHS=blocks chainstate indexes
+      additional_contexts:
+        - data=$BITCOIN_DATA_FOLDER
+    volumes:
+      - $BITCOIN_DATA_FOLDER:/data
+    profiles:
+      - data
+  # Can be used to move argon data around
+  # argon-data:
+  #   image: ghcr.io/soundofspace/argon-docker-deploy/argon-data:latest
+  #   build: 
+  #     context: data
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - TAR_PATHS=chains/argon/db
+  #     additional_contexts:
+  #       - data=$ARGON_DATA_FOLDER
+  #   volumes:
+  #     - $ARGON_DATA_FOLDER:/data
+  #   profiles:
+  #     - data
+  bitcoin:
+    image: ghcr.io/soundofspace/argon-docker-deploy/bitcoin:latest
+    platform: linux/amd64
+    restart: unless-stopped
+    build: 
+      context: bitcoin
+      dockerfile: dockerfile
+    volumes:
+      - $BITCOIN_DATA_FOLDER:/data
+  argon-miner:
+    image: ghcr.io/argonprotocol/argon-miner:latest
+    platform: linux/amd64
+    restart: unless-stopped
+    depends_on:
+      - bitcoin
+    command: 
+      - --bitcoin-rpc-url=http://bitcoin:bitcoin@bitcoin:5000
+      - --no-mdns
+      - --no-telemetry
+      - --port=30333
+      - --sync=full
+      - --network-backend=libp2p
+      - --validator
+      - --notebook-archive-hosts=https://notebook-archives.argon.network
+      - --chain=mainnet
+      - --detailed-log-output
+      - --name=argon-miner
+      - --state-pruning=256
+      - -linfo,pallet=trace,argon=trace,txpool=trace
+      - --node-key-file=/data/p2p.key
+      - --unsafe-force-node-key-generation
+      - --compute-author=5Dts3Cjxb6MphAD9ZP3Q4woaoCeyH9uaGTSHvqDruPPHjtRg
+    volumes:
+      - $ARGON_DATA_FOLDER:/data
+    ports:
+     - 30333:30333
+  
