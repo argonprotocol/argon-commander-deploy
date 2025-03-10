@@ -28,8 +28,6 @@ TODO's here:
 - Link images in github project
 
 ## How run this on a fresh server
-- Install docker
-- Copy bitcoin state to speed up loading by hours/days
 
 ```sh
 # Install docker (modify as need, eg sudo)
