@@ -1,6 +1,6 @@
 services:
   bitcoin-data:
-    image: ghcr.io/soundofspace/argon-docker-deploy/bitcoin-data:latest
+    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin-data:latest
     build: 
       context: data
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
       - data
   # Can be used to move argon data around
   # argon-data:
-  #   image: ghcr.io/soundofspace/argon-docker-deploy/argon-data:latest
+  #   image: ghcr.io/argonprotocol/argon-commander-deploy/argon-data:latest
   #   build: 
   #     context: data
   #     dockerfile: Dockerfile
@@ -27,7 +27,7 @@ services:
   #   profiles:
   #     - data
   bitcoin:
-    image: ghcr.io/soundofspace/argon-docker-deploy/bitcoin:latest
+    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin:latest
     platform: linux/amd64
     restart: unless-stopped
     build: 
