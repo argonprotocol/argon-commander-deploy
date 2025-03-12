@@ -37,6 +37,7 @@ services:
       - $BITCOIN_DATA_FOLDER:/data
   argon-miner:
     image: ghcr.io/argonprotocol/argon-miner:latest
+    user: "${UID}:${GID}"
     platform: linux/amd64
     restart: unless-stopped
     depends_on:
@@ -62,4 +63,10 @@ services:
       - $ARGON_DATA_FOLDER:/data
     ports:
      - 30333:30333
+
+  test:
+    image: debian
+    environment:
+      - test=test
+      - quick=c
   
