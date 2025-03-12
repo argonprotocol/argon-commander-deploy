@@ -28,13 +28,6 @@ COPY <<-EOF copy.sh
 	#!/bin/bash
 
 	cd /data
-
-	if [ $(ls -A /data/ | wc -l) -ne 0 ]; then
-		cd -
-		echo "Data directory already has data skipping"
-		exit 0
-	fi
-
 	cat /init-data/data.tar.* | tar xvf -
 	cd -
 EOF

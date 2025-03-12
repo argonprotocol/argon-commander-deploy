@@ -19,7 +19,7 @@ Image that will periodically get updated and will contain bitcoin state so we ca
 
 Build image and push:
 ```sh
-docker compose build --remove-orphans bitcoin-data
+docker compose build bitcoin-data
 docker compose push bitcoin-data
 ```
 
@@ -35,7 +35,7 @@ curl -fsSL get.docker.com | bash
 usermod -aG docker $USER
 
 # Copy bitcoin state to speed up loading by hours/days
-# !!! Do this before running bitcoin (otherwise delete contents in data/bitcoin if you want to run this again)
+# Be careful this will override data that is already there
 docker compose run --remove-orphans bitcoin-data
 
 # Start argon and bitcoin
