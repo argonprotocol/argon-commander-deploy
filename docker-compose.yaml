@@ -37,7 +37,12 @@ services:
 
   argon-miner:
     <<: *common-config
-    image: ghcr.io/argonprotocol/argon-miner:latest
+    build:
+      context: ./argon-miner
+      dockerfile: Dockerfile
+    # TODO this doesnt actually work on linux. It sets this to empty, which also does the trick.
+    # Does this mean root user is set?
+    user: "${UID}:${GID}"
     restart: unless-stopped
     depends_on:
       - bitcoin
@@ -46,6 +51,7 @@ services:
       - --no-mdns
       - --no-telemetry
       - --port=30333
+      - --rpc-port=9944
       - --sync=full
       - --network-backend=libp2p
       - --validator
@@ -58,7 +64,6 @@ services:
       - --node-key-file=/data/p2p.key
       - --unsafe-force-node-key-generation
       - --compute-miners=0
-      - --base-path=/data
     volumes:
       - $ARGON_DATA_FOLDER:/data
     ports:
