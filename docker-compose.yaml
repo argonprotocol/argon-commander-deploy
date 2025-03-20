@@ -36,7 +36,9 @@ services:
     volumes:
       - $BITCOIN_DATA_FOLDER:/data
   argon-miner:
-    image: ghcr.io/argonprotocol/argon-miner:latest
+    build:
+      context: ./argon-miner
+      dockerfile: Dockerfile
     user: "${UID}:${GID}"
     platform: linux/amd64
     restart: unless-stopped
@@ -45,8 +47,8 @@ services:
     command: 
       - --bitcoin-rpc-url=http://bitcoin:bitcoin@bitcoin:5000
       - --no-mdns
-      - --no-telemetry
       - --port=30333
+      - --rpc-port=9944
       - --sync=full
       - --network-backend=libp2p
       - --validator
@@ -58,15 +60,8 @@ services:
       - -linfo,pallet=trace,argon=trace,txpool=trace
       - --node-key-file=/data/p2p.key
       - --unsafe-force-node-key-generation
-      - --compute-author=5Dts3Cjxb6MphAD9ZP3Q4woaoCeyH9uaGTSHvqDruPPHjtRg
+      - --compute-miners=0
     volumes:
       - $ARGON_DATA_FOLDER:/data
     ports:
      - 30333:30333
-
-  test:
-    image: debian
-    environment:
-      - test=test
-      - quick=c
-  
