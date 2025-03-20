@@ -36,7 +36,10 @@ usermod -aG docker $USER
 
 # Copy bitcoin state to speed up loading by hours/days
 # Be careful this will override data that is already there
-docker compose run --remove-orphans bitcoin-data
+docker compose run --remove-orphans --pull=always bitcoin-data
+
+docker compose build bitcoin
+docker compose build argon-miner
 
 # Start argon and bitcoin
 docker compose up -d

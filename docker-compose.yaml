@@ -29,10 +29,10 @@ services:
   bitcoin:
     image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin:latest
     platform: linux/amd64
+    build:
+      context: ./bitcoin
+      dockerfile: Dockerfile
     restart: unless-stopped
-    build: 
-      context: bitcoin
-      dockerfile: dockerfile
     volumes:
       - $BITCOIN_DATA_FOLDER:/data
   argon-miner:
