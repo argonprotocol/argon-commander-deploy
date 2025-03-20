@@ -1,6 +1,6 @@
 #!/bin/bash
 
-localhost_block=1000 #$(bitcoin-cli --conf=/etc/bitcoin/bitcoin.conf getblockchaininfo | jq -r '.blocks')
+localhost_block=$(bitcoin-cli --conf=/etc/bitcoin/bitcoin.conf getblockchaininfo | jq -r '.blocks')
 localhost_synced=true #$(bitcoin-cli --conf=/etc/bitcoin/bitcoin.conf getindexinfo | jq -r '.synced')
 
 # Fetch latest block from blockchain.info with proper error handling
