@@ -1,5 +1,14 @@
+x-common-config: &common-config
+  platform: linux/amd64
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100k"
+      max-file: "5"
+      
 services:
   bitcoin-data:
+    <<: *common-config
     image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin-data:latest
     build: 
       context: data
@@ -12,23 +21,24 @@ services:
       - $BITCOIN_DATA_FOLDER:/data
     profiles:
       - data
-  # Can be used to move argon data around
-  # argon-data:
-  #   image: ghcr.io/argonprotocol/argon-commander-deploy/argon-data:latest
-  #   build: 
-  #     context: data
-  #     dockerfile: Dockerfile
-  #     args:
-  #       - TAR_PATHS=chains/argon/db
-  #     additional_contexts:
-  #       - data=$ARGON_DATA_FOLDER
-  #   volumes:
-  #     - $ARGON_DATA_FOLDER:/data
-  #   profiles:
-  #     - data
+  argon-data:
+    <<: *common-config
+    image: ghcr.io/argonprotocol/argon-commander-deploy/argon-data:latest
+    build: 
+      context: data
+      dockerfile: Dockerfile
+      args:
+        - TAR_PATHS=chains/argon/db
+      additional_contexts:
+        - data=$ARGON_DATA_FOLDER
+    volumes:
+      - $ARGON_DATA_FOLDER:/data
+    profiles:
+      - data
+
   bitcoin:
+    <<: *common-config
     image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin:latest
-    platform: linux/amd64
     restart: unless-stopped
     build: 
       context: bitcoin
@@ -36,9 +46,11 @@ services:
     volumes:
       - $BITCOIN_DATA_FOLDER:/data
   argon-miner:
+    <<: *common-config
     image: ghcr.io/argonprotocol/argon-miner:latest
+    # TODO this doesnt actually work on linux. It sets this to empty, which also does the trick.
+    # Does this mean root user is set?
     user: "${UID}:${GID}"
-    platform: linux/amd64
     restart: unless-stopped
     depends_on:
       - bitcoin
@@ -63,10 +75,3 @@ services:
       - $ARGON_DATA_FOLDER:/data
     ports:
      - 30333:30333
-
-  test:
-    image: debian
-    environment:
-      - test=test
-      - quick=c
-  

@@ -21,6 +21,9 @@ Build image and push:
 ```sh
 docker compose build bitcoin-data
 docker compose push bitcoin-data
+
+docker compose build argon-data
+docker compose push argon-data
 ```
 
 TODO's here:
@@ -36,7 +39,9 @@ usermod -aG docker $USER
 
 # Copy bitcoin state to speed up loading by hours/days
 # Be careful this will override data that is already there
-docker compose run --remove-orphans bitcoin-data
+docker compose run --remove-orphans --pull=always bitcoin-data
+docker compose run --remove-orphans --pull=always argon-data
+
 
 # Start argon and bitcoin
 docker compose up -d
