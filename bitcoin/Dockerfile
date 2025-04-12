@@ -17,4 +17,4 @@ COPY ./bitcoin-signet.conf /etc/bitcoin/bitcoin-signet.conf
 COPY ./entrypoint.sh /
 
 ENTRYPOINT [ "./entrypoint.sh" ]
-CMD [ "/usr/local/bin/bitcoind", "-conf=/etc/bitcoin/bitcoin.conf" ]
+CMD [ "/usr/local/bin/bitcoind", "-conf=/etc/bitcoin/bitcoin.conf" ] 
