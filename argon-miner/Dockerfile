@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y \
 COPY syncstatus.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/syncstatus.sh
 
-USER ${USER} 
+USER argon
