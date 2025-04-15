@@ -1,6 +1,7 @@
 # syntax = docker/dockerfile:latest
 
 FROM --platform=linux/amd64 debian
+LABEL org.opencontainers.image.source https://github.com/argonprotocol/argon-commander-deploy
 
 RUN <<END
     set -ex
@@ -12,6 +13,7 @@ RUN <<END
 END
 
 COPY ./bitcoin.conf /etc/bitcoin/bitcoin.conf
+COPY ./bitcoin-signet.conf /etc/bitcoin/bitcoin-signet.conf
 COPY ./entrypoint.sh /
 
 ENTRYPOINT [ "./entrypoint.sh" ]

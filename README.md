@@ -22,8 +22,6 @@ Build image and push:
 docker compose build bitcoin-data
 docker compose push bitcoin-data
 
-docker compose build argon-data
-docker compose push argon-data
 ```
 
 TODO's here:
@@ -45,6 +43,9 @@ docker compose run --remove-orphans --pull=always argon-data
 
 # Start argon and bitcoin
 docker compose up -d
+# To start using testnet config make sure to use this env file
+docker compose --env-file=.env.testnet up -d
+
 
 # View logs for progress
 docker compose logs -f
