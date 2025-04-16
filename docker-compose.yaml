@@ -64,8 +64,5 @@ services:
       - --node-key-file=/data/p2p.key
       - --unsafe-force-node-key-generation
       - --compute-miners=0
-      - --base-path=/data
-    volumes:
-      - $ARGON_DATA_FOLDER:/data
     ports:
      - 30333:30333
