@@ -43,9 +43,6 @@ services:
     build:
       context: ./argon-miner
       dockerfile: Dockerfile
-    # TODO this doesnt actually work on linux. It sets this to empty, which also does the trick.
-    # Does this mean root user is set?
-    user: "${UID}:${GID}"
     restart: unless-stopped
     depends_on:
       - bitcoin
