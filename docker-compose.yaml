@@ -32,6 +32,9 @@ services:
     command:
       - /usr/local/bin/bitcoind
       - -conf=${BITCOIN_CONFIG}
+    environment:
+      - BITCOIN_CONFIG=${BITCOIN_CONFIG}
+      - BITCOIN_CHAIN=${BITCOIN_CHAIN}
     volumes:
       - $BITCOIN_DATA_FOLDER:/data
 
@@ -52,7 +55,7 @@ services:
       - --no-telemetry
       - --port=30333
       - --rpc-port=9944
-      - --sync=full
+      - --sync=fast
       - --network-backend=libp2p
       - --validator
       - --notebook-archive-hosts=${NOTEBOOK_ARCHIVE_HOSTS}
@@ -60,12 +63,12 @@ services:
       - --detailed-log-output
       - --name=argon-miner
       - --state-pruning=256
-      - -linfo,pallet=trace,argon=trace,txpool=trace
+      - -linfo,pallet=trace,argon=trace,txpool=trace,argon_notary_apis=info
       - --node-key-file=/data/p2p.key
       - --unsafe-force-node-key-generation
       - --compute-miners=0
-      - --base-path=/argon-data
+      - --base-path=/data
     volumes:
-      - $ARGON_DATA_FOLDER:/argon-data
+      - $ARGON_DATA_FOLDER:/data
     ports:
      - 30333:30333

@@ -1,11 +1,14 @@
 #!/bin/bash
 
-localhost_block=$(bitcoin-cli --conf=/etc/bitcoin/bitcoin.conf getblockchaininfo | jq -r '.blocks')
-localhost_synced=true #$(bitcoin-cli --conf=/etc/bitcoin/bitcoin.conf getindexinfo | jq -r '.synced')
+localhost_block=$(bitcoin-cli --conf="$BITCOIN_CONFIG" getblockchaininfo | jq -r '.blocks')
+localhost_synced=true #$(bitcoin-cli --conf="$BITCOIN_CONFIG" getindexinfo | jq -r '.synced')
 
-# Fetch latest block from blockchain.info with proper error handling
-mainchain_block=$(curl -s -m 10 -H "Content-Type: application/json" \
-      "https://blockchain.info/latestblock" | jq -r '.block_index')
+if [ "$BITCOIN_CHAIN" = "signet" ]; then
+  mainchain_block=$(bitcoin-cli --conf="$BITCOIN_CONFIG" getpeerinfo | jq 'map(.startingheight) | max')
+else
+  # Fetch latest block from blockchain.info
+  mainchain_block=$(curl -s -m 10 -H "Content-Type: application/json" "https://blockchain.info/latestblock" | jq -r '.block_index')  
+fi
 
 # Check if values were retrieved successfully
 if [[ -z "$mainchain_block" || -z "$localhost_block" ]]; then
