@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:latest
 
 FROM --platform=linux/amd64 debian
-LABEL org.opencontainers.image.source https://github.com/argonprotocol/argon-commander-deploy
+LABEL org.opencontainers.image.source https://github.com/argonprotocol/commander-deploy
 
 RUN <<END
     set -ex

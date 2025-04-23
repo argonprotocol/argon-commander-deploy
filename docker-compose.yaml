@@ -9,7 +9,7 @@ x-common-config: &common-config
 services:
   bitcoin-data:
     <<: *common-config
-    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin-data:latest
+    image: ghcr.io/argonprotocol/commander-deploy/bitcoin-data:latest
     build: 
       context: data
       dockerfile: Dockerfile
@@ -21,10 +21,12 @@ services:
       - $BITCOIN_DATA_FOLDER:/data
     profiles:
       - data
-  
+    deploy:
+      replicas: 1
+
   bitcoin:
     <<: *common-config
-    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin:latest
+    image: ghcr.io/argonprotocol/commander-deploy/bitcoin:latest
     restart: unless-stopped
     build: 
       context: bitcoin
@@ -46,7 +48,7 @@ services:
     restart: unless-stopped
     depends_on:
       - bitcoin
-    command: 
+    command:
       - --bitcoin-rpc-url=http://bitcoin:bitcoin@bitcoin:5000
       - --no-mdns
       - --no-telemetry
@@ -66,3 +68,29 @@ services:
       - --compute-miners=0
     ports:
      - 30333:30333
+    environment:
+      - ARGON_CHAIN=${ARGON_CHAIN}
+      - ARGON_ARCHIVE_NODE=${ARGON_ARCHIVE_NODE}
+
+  bot:
+    <<: *common-config
+    image: ghcr.io/argonprotocol/commander-bot:latest
+    restart: unless-stopped
+    depends_on:
+      - argon-miner
+    ports:
+      - 3000:3000
+    env_file:
+      - ../commander-config/security.env
+    environment:
+      - PORT="3000"
+      - BIDDING_RULES_PATH="/tmp/biddingRules.json"
+      - KEYPAIR_PATH="/tmp/wallet.json"
+      - LOCAL_RPC_URL="ws://localhost:9944"
+      - ARCHIVE_NODE_URL=${ARGON_ARCHIVE_HOSTS}
+      - DATADIR="/data"
+    volumes:
+      - ../commander-config/wallet.json:/tmp/wallet.json
+      - ../commander-config/biddingRules.json:/tmp/biddingRules.json
+      - ../commander-config/createBiddingRules.ts:/usr/src/app/src/createBiddingRules.ts
+      - ../commander-data:/data
