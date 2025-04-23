@@ -5,12 +5,12 @@ x-common-config: &common-config
     options:
       max-size: "100k"
       max-file: "5"
-      
+
 services:
   bitcoin-data:
     <<: *common-config
     image: ghcr.io/argonprotocol/commander-deploy/bitcoin-data:latest
-    build: 
+    build:
       context: data
       dockerfile: Dockerfile
       args:
@@ -28,7 +28,7 @@ services:
     <<: *common-config
     image: ghcr.io/argonprotocol/commander-deploy/bitcoin:latest
     restart: unless-stopped
-    build: 
+    build:
       context: bitcoin
       dockerfile: Dockerfile
     command:
@@ -50,10 +50,14 @@ services:
       - bitcoin
     command:
       - --bitcoin-rpc-url=http://bitcoin:bitcoin@bitcoin:5000
+      - --base-path=/data
       - --no-mdns
       - --no-telemetry
       - --port=30333
       - --rpc-port=9944
+      - --rpc-methods=unsafe
+      - --rpc-cors=all
+      - --unsafe-rpc-external
       - --sync=fast
       - --network-backend=libp2p
       - --validator
@@ -67,10 +71,13 @@ services:
       - --unsafe-force-node-key-generation
       - --compute-miners=0
     ports:
-     - 30333:30333
+      - "30333:30333"
+      - "9944:9944"
     environment:
       - ARGON_CHAIN=${ARGON_CHAIN}
       - ARGON_ARCHIVE_NODE=${ARGON_ARCHIVE_NODE}
+    volumes:
+      - $ARGON_DATA_FOLDER:/data
 
   bot:
     <<: *common-config
@@ -79,16 +86,16 @@ services:
     depends_on:
       - argon-miner
     ports:
-      - 3000:3000
+      - "3000:3000"
     env_file:
       - ../commander-config/security.env
     environment:
       - PORT="3000"
-      - BIDDING_RULES_PATH="/tmp/biddingRules.json"
-      - KEYPAIR_PATH="/tmp/wallet.json"
-      - LOCAL_RPC_URL="ws://localhost:9944"
+      - BIDDING_RULES_PATH=/tmp/biddingRules.json
+      - KEYPAIR_PATH=/tmp/wallet.json
+      - LOCAL_RPC_URL=ws://argon-miner:9944
       - ARCHIVE_NODE_URL=${ARGON_ARCHIVE_NODE}
-      - DATADIR="/data"
+      - DATADIR=/data
     volumes:
       - ../commander-config/wallet.json:/tmp/wallet.json
       - ../commander-config/biddingRules.json:/tmp/biddingRules.json
