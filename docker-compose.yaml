@@ -45,6 +45,7 @@ services:
     build:
       context: ./argon-miner
       dockerfile: Dockerfile
+    user: "${UID}:${GID}"
     restart: unless-stopped
     depends_on:
       - bitcoin
