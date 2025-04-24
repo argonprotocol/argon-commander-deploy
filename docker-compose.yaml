@@ -99,7 +99,7 @@ services:
     volumes:
       - ../commander-config/wallet.json:/tmp/wallet.json
       - ../commander-config/biddingRules.json:/tmp/biddingRules.json
-      - ../commander-config/createBiddingRules.ts:/usr/src/app/src/createBiddingRules.ts
+      - ../commander-config/bidding-calculator:/usr/src/app/src/bidding-calculator
       - ../commander-data:/data
     profiles:
       - bidding
