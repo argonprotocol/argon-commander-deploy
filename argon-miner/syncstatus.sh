@@ -2,7 +2,7 @@
 
 # Function to get block number from a given URL
 get_block_height() {
-  local url=$1
+  local url="${1/wss:/https:}"
   curl -s -H "Content-Type: application/json" \
        -d '{"jsonrpc":"2.0","id":1,"method":"chain_getHeader","params":[]}' \
        "$url" | jq -r '.result.number' | xargs printf "%d\n"
