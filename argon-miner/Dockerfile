@@ -1,4 +1,4 @@
-FROM ghcr.io/argonprotocol/argon-miner:1.1.0-rc.3
+FROM ghcr.io/argonprotocol/argon-miner:1.1.0-rc.4
 
 USER root
 RUN apt-get update && apt-get install -y \
