@@ -5,7 +5,9 @@ x-common-config: &common-config
     options:
       max-size: "100k"
       max-file: "5"
-
+  networks:
+    - default
+    
 services:
   bitcoin-data:
     <<: *common-config
@@ -104,3 +106,6 @@ services:
       - ../commander-data:/data
     profiles:
       - bidding
+networks:
+  default:
+    driver: bridge
