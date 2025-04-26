@@ -47,7 +47,7 @@ services:
     build:
       context: ./argon-miner
       dockerfile: Dockerfile
-    user: "${UID:-1000}:${GID:-1000}"  # fallback defaults so no warning if UID/GID missing
+    user: "${UID}:${GID}"
     restart: unless-stopped
     depends_on:
       - bitcoin
@@ -105,7 +105,7 @@ services:
       - ../commander-config/bidding-calculator:/usr/src/app/src/bidding-calculator
       - ../commander-data:/data
     profiles:
-      - bidding
+      - bot
 networks:
   default:
     driver: bridge
