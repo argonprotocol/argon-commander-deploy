@@ -7,7 +7,7 @@ x-common-config: &common-config
       max-file: "5"
   networks:
     - default
-    
+
 services:
   bitcoin-data:
     <<: *common-config
@@ -47,7 +47,7 @@ services:
     build:
       context: ./argon-miner
       dockerfile: Dockerfile
-    user: "${UID}:${GID}"
+    user: "${UID:-1000}:${GID:-1000}"  # fallback defaults so no warning if UID/GID missing
     restart: unless-stopped
     depends_on:
       - bitcoin
