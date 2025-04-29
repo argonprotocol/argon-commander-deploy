@@ -93,7 +93,7 @@ services:
     env_file:
       - ../commander-config/security.env
     environment:
-      - PORT="3000"
+      - PORT=3000
       - BIDDING_RULES_PATH=/tmp/biddingRules.json
       - KEYPAIR_PATH=/tmp/wallet.json
       - LOCAL_RPC_URL=ws://argon-miner:9944
@@ -106,6 +106,7 @@ services:
       - ../commander-data:/data
     profiles:
       - bot
+
 networks:
   default:
     driver: bridge
