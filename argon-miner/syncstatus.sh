@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Function to get block number from a given URL
-get_block_height() {
+get_block_number() {
   local url="${1/wss:/https:}"
   curl -s -H "Content-Type: application/json" \
        -d '{"jsonrpc":"2.0","id":1,"method":"chain_getHeader","params":[]}' \
@@ -9,8 +9,8 @@ get_block_height() {
 }
 
 # Get block numbers
-localhost_block_number=$(get_block_height "http://localhost:9944")
-mainchain_block_number=$(get_block_height "$ARGON_ARCHIVE_NODE")
+localhost_block_number=$(get_block_number "http://localhost:9944")
+mainchain_block_number=$(get_block_number "$ARGON_ARCHIVE_NODE")
 
 # Check if values were retrieved successfully
 if [[ -z "$localhost_block_number" || -z "$mainchain_block_number" ]]; then

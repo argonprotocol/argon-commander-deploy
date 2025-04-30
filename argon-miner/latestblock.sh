@@ -9,8 +9,8 @@ get_block_number() {
 }
 
 # Get block numbers
-localhost_block_number=$(get_block_height "http://localhost:9944")
-mainchain_block_number=$(get_block_height "$ARGON_ARCHIVE_NODE")
+localhost_block_number=$(get_block_number "http://localhost:9944")
+mainchain_block_number=$(get_block_number "$ARGON_ARCHIVE_NODE")
 
 # Check if values were retrieved successfully
 if [[ -z "$localhost_block_number" || -z "$mainchain_block_number" ]]; then
