@@ -19,5 +19,8 @@ COPY ./entrypoint.sh /
 COPY syncstatus.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/syncstatus.sh
 
+COPY latestblock.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/latestblock.sh
+
 ENTRYPOINT [ "./entrypoint.sh" ]
 CMD [ "/usr/local/bin/bitcoind", "-conf=/etc/bitcoin/bitcoin.conf" ]
