@@ -99,7 +99,7 @@ services:
       - LOCAL_RPC_URL=ws://argon-miner:9944
       - ARCHIVE_NODE_URL=${ARGON_ARCHIVE_NODE}
       - DATADIR=/data
-      - OLDEST_ROTATION_TO_SYNC=${OLDEST_ROTATION_TO_SYNC}
+      - OLDEST_FRAME_ID_TO_SYNC=${OLDEST_FRAME_ID_TO_SYNC}
     volumes:
       - ../commander-config/wallet.json:/tmp/wallet.json
       - ../commander-config/biddingRules.json:/tmp/biddingRules.json
