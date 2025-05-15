@@ -103,7 +103,7 @@ services:
     volumes:
       - ../commander-config/wallet.json:/tmp/wallet.json
       - ../commander-config/biddingRules.json:/tmp/biddingRules.json
-      - ../commander-config/bidding-calculator:/usr/src/app/src/bidding-calculator
+      - ../commander-config/bidding-calculator/src:/usr/src/app/bidding-calculator/src
       - ../commander-data:/data
     profiles:
       - bot
