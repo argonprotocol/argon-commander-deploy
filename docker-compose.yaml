@@ -104,6 +104,7 @@ services:
       - ../commander-config/wallet.json:/tmp/wallet.json
       - ../commander-config/biddingRules.json:/tmp/biddingRules.json
       - ../commander-config/bidding-calculator/src:/usr/src/app/bidding-calculator/src
+      - ../commander-config/bot/src:/usr/src/app/bot/src
       - ../commander-data:/data
     profiles:
       - bot
