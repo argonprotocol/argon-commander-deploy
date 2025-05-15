@@ -91,7 +91,8 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ../commander-config/security.env
+      - ../commander-config/.env.state
+      - ../commander-config/.env.security
     environment:
       - PORT=3000
       - BIDDING_RULES_PATH=/tmp/biddingRules.json
