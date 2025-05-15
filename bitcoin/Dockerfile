@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:latest
 
 FROM --platform=linux/amd64 debian
-LABEL org.opencontainers.image.source https://github.com/argonprotocol/argon-commander-deploy
+LABEL org.opencontainers.image.source https://github.com/argonprotocol/commander-deploy
 
 RUN <<END
     set -ex
@@ -18,6 +18,9 @@ COPY ./entrypoint.sh /
 
 COPY syncstatus.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/syncstatus.sh
+
+COPY latestblock.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/latestblock.sh
 
 ENTRYPOINT [ "./entrypoint.sh" ]
 CMD [ "/usr/local/bin/bitcoind", "-conf=/etc/bitcoin/bitcoin.conf" ]

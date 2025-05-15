@@ -1,4 +1,4 @@
-# Argon commander deploy
+# Argon's Commander Deploy
 
 This repo contains everything argon command will run on a vm. Everthing will run in docker (or podman).
 

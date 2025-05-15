@@ -5,12 +5,14 @@ x-common-config: &common-config
     options:
       max-size: "100k"
       max-file: "5"
-      
+  networks:
+    - default
+
 services:
   bitcoin-data:
     <<: *common-config
-    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin-data:latest
-    build: 
+    image: ghcr.io/argonprotocol/commander-deploy/bitcoin-data:latest
+    build:
       context: data
       dockerfile: Dockerfile
       args:
@@ -21,12 +23,14 @@ services:
       - $BITCOIN_DATA_FOLDER:/data
     profiles:
       - data
-  
+    deploy:
+      replicas: 1
+
   bitcoin:
     <<: *common-config
-    image: ghcr.io/argonprotocol/argon-commander-deploy/bitcoin:latest
+    image: ghcr.io/argonprotocol/commander-deploy/bitcoin:latest
     restart: unless-stopped
-    build: 
+    build:
       context: bitcoin
       dockerfile: Dockerfile
     command:
@@ -43,15 +47,20 @@ services:
     build:
       context: ./argon-miner
       dockerfile: Dockerfile
+    user: "${UID}:${GID}"
     restart: unless-stopped
     depends_on:
       - bitcoin
-    command: 
+    command:
       - --bitcoin-rpc-url=http://bitcoin:bitcoin@bitcoin:5000
+      - --base-path=/data
       - --no-mdns
       - --no-telemetry
       - --port=30333
       - --rpc-port=9944
+      - --rpc-methods=unsafe
+      - --rpc-cors=all
+      - --unsafe-rpc-external
       - --sync=fast
       - --network-backend=libp2p
       - --validator
@@ -64,8 +73,43 @@ services:
       - --node-key-file=/data/p2p.key
       - --unsafe-force-node-key-generation
       - --compute-miners=0
-      - --base-path=/data
+    ports:
+      - "30333:30333"
+      - "9944:9944"
+    environment:
+      - ARGON_CHAIN=${ARGON_CHAIN}
+      - ARGON_ARCHIVE_NODE=${ARGON_ARCHIVE_NODE}
     volumes:
       - $ARGON_DATA_FOLDER:/data
+
+  bot:
+    <<: *common-config
+    image: ghcr.io/argonprotocol/commander-bot:latest
+    restart: unless-stopped
+    depends_on:
+      - argon-miner
     ports:
-     - 30333:30333
+      - "3000:3000"
+    env_file:
+      - ../commander-config/.env.state
+      - ../commander-config/.env.security
+    environment:
+      - PORT=3000
+      - BIDDING_RULES_PATH=/tmp/biddingRules.json
+      - KEYPAIR_PATH=/tmp/wallet.json
+      - LOCAL_RPC_URL=ws://argon-miner:9944
+      - ARCHIVE_NODE_URL=${ARGON_ARCHIVE_NODE}
+      - DATADIR=/data
+      - OLDEST_FRAME_ID_TO_SYNC=${OLDEST_FRAME_ID_TO_SYNC}
+    volumes:
+      - ../commander-config/wallet.json:/tmp/wallet.json
+      - ../commander-config/biddingRules.json:/tmp/biddingRules.json
+      - ../commander-config/bidding-calculator/src:/usr/src/app/bidding-calculator/src
+      - ../commander-config/bot/src:/usr/src/app/bot/src
+      - ../commander-data:/data
+    profiles:
+      - bot
+
+networks:
+  default:
+    driver: bridge
